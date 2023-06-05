@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<title>Favicon at faex.com</title>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<header>
+		<h1>Favicon JavaScript</h1>
+	</header>
+	<main>
+		<p>Generate favicon files.</p>
+		<section>
+			<figure>
+				<canvas id="canvas1" width="16" height="16"></canvas>
+			</figure>
+			<button onclick="download1()">Download PNG</button>
+		</section>
+		<section>
+			<figure>
+				<svg id="svg1" width="16" height="16">
+					<circle cx="8" cy="8" r="6" fill="red"/>
+					<circle cx="8" cy="8" r="4" fill="black"/>
+					<circle cx="8" cy="8" r="2" fill="white"/>
+				</svg>
+			</figure>
+			<button onclick="download2()">Download SVG</button>
+		</section>
+	</main>
+	<script>
+		var canvas1 = document.getElementById('canvas1');
+		var ctx1 = canvas1.getContext('2d');
+		function drawCircle(r, c) {
+			ctx1.beginPath();
+			ctx1.arc(8, 8, r, 0, 7);
+			ctx1.fillStyle = c;
+			ctx1.fill();
+		}
+		drawCircle(6,'red');
+		drawCircle(4,'black');
+		drawCircle(2,'white');
+		const xs = new XMLSerializer();
+		function download1() {
+			var link1 = document.createElement('a');
+			link1.download = 'favicon.ico';
+			link1.href = canvas1.toDataURL('image/png');
+			link1.click();
+		}
+		var svg1 = document.getElementById('svg1');
+		function download2() {
+			var link2 = document.createElement('a');
+			link2.download = "favicon.ico";
+			link2.href = URL.createObjectURL(
+				new Blob([xs.serializeToString(svg1)], 
+					{type: 'image/svg+xml'}));
+			link2.click();
+		}
+	</script>
+	<footer>
+		<p>Copyright &copy; 2023 faex.com</p>
+	</footer>
+</body>
+</html>
