@@ -1,19 +1,289 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Home at faex.com</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>faex · Data Sediment Analytics</title>
+	<meta name="description" content="faex analyzes the sediment your systems leave behind: logs, traces, exhaust, and cold data, and surfaces the signal that settled at the bottom.">
+	<meta name="theme-color" content="#0a0c12">
 
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="faex · Data Sediment Analytics">
+	<meta property="og:description" content="We analyze the data your systems leave behind and surface what it's telling you.">
+	<meta property="og:url" content="https://www.faex.com/">
+	<meta name="twitter:card" content="summary_large_image">
+
+	<link rel="icon" href="/favicon.ico" sizes="any">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+	<style>
+		:root {
+			--bg: #0a0c12;
+			--bg-soft: #0f131d;
+			--surface: rgba(255, 255, 255, 0.035);
+			--border: rgba(255, 255, 255, 0.09);
+			--text: #e9edf5;
+			--muted: #8b93a7;
+			--signal: #37c6e0;   /* cyan signal */
+			--amber: #e6a83c;    /* surfaced insight */
+			--deep: #4f6bd8;     /* deep layer */
+			--radius: 14px;
+			--max: 1120px;
+			--font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			--font-display: 'Space Grotesk', var(--font-body);
+			--font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+		}
+
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+		html { scroll-behavior: smooth; }
+		body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.62; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+		a { color: inherit; text-decoration: none; }
+		.wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+		body::before {
+			content: ""; position: fixed; inset: 0; z-index: -1;
+			background:
+				radial-gradient(680px circle at 12% -5%, rgba(55, 198, 224, 0.14), transparent 45%),
+				radial-gradient(760px circle at 92% 12%, rgba(230, 168, 60, 0.09), transparent 48%);
+			pointer-events: none;
+		}
+
+		/* ---------- Nav ---------- */
+		header.nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(10, 12, 18, 0.62); border-bottom: 1px solid var(--border); }
+		.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+		.logo { font-family: var(--font-display); font-weight: 700; font-size: 23px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 11px; }
+		/* layered-data mark: settling strata */
+		.mark {
+			width: 22px; height: 22px; border-radius: 5px; flex: none;
+			background: linear-gradient(180deg,
+				var(--signal) 0%, var(--signal) 28%,
+				var(--deep) 28%, var(--deep) 58%,
+				var(--amber) 58%, var(--amber) 100%);
+			box-shadow: 0 0 14px rgba(55, 198, 224, 0.4);
+		}
+		.nav-links { display: flex; gap: 30px; align-items: center; }
+		.nav-links a { color: var(--muted); font-size: 15px; transition: color 0.2s; }
+		.nav-links a:hover { color: var(--text); }
+		.nav-cta { padding: 9px 18px; border: 1px solid var(--border); border-radius: 10px; color: var(--text) !important; transition: border-color 0.2s, background 0.2s; }
+		.nav-cta:hover { border-color: var(--signal); background: rgba(55, 198, 224, 0.1); }
+		@media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+		/* ---------- Hero ---------- */
+		.hero { padding: 116px 0 96px; text-align: center; }
+		.eyebrow { display: inline-block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); border: 1px solid var(--border); padding: 6px 15px; border-radius: 999px; margin-bottom: 28px; background: var(--surface); }
+		.hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.04; letter-spacing: -0.03em; max-width: 16ch; margin: 0 auto 22px; }
+		.hero h1 .grad { background: linear-gradient(120deg, var(--signal), var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+		.hero p.lede { font-size: clamp(1.05rem, 2.2vw, 1.28rem); color: var(--muted); max-width: 60ch; margin: 0 auto 38px; }
+		.btn-row { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+		.btn { font-family: var(--font-body); font-weight: 600; font-size: 16px; padding: 14px 26px; border-radius: 11px; cursor: pointer; transition: transform 0.15s, box-shadow 0.2s, background 0.2s; border: 1px solid transparent; }
+		.btn-primary { background: linear-gradient(120deg, var(--signal), #5ad6ec); color: #04141a; box-shadow: 0 8px 28px rgba(55, 198, 224, 0.32); }
+		.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(55, 198, 224, 0.46); }
+		.btn-ghost { background: var(--surface); border-color: var(--border); color: var(--text); }
+		.btn-ghost:hover { border-color: var(--signal); }
+
+		.strata { height: 10px; width: 100%; background: linear-gradient(90deg, var(--signal), var(--signal) 24%, var(--deep) 24%, var(--deep) 52%, #34406e 52%, #34406e 72%, var(--amber) 72%, var(--amber) 100%); opacity: 0.5; }
+
+		/* ---------- Section shell ---------- */
+		section { padding: 88px 0; }
+		.section-head { max-width: 650px; margin-bottom: 52px; }
+		.section-head .tag { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--signal); font-weight: 700; }
+		.section-head h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.5rem); letter-spacing: -0.02em; margin: 12px 0 14px; line-height: 1.15; }
+		.section-head p { color: var(--muted); font-size: 1.05rem; }
+
+		/* ---------- Services grid ---------- */
+		.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+		.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; transition: transform 0.2s, border-color 0.2s, background 0.2s; }
+		.card:hover { transform: translateY(-4px); border-color: rgba(55, 198, 224, 0.45); background: rgba(55, 198, 224, 0.05); }
+		.card .icon { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, rgba(55, 198, 224, 0.22), rgba(230, 168, 60, 0.2)); margin-bottom: 20px; font-size: 22px; }
+		.card h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; letter-spacing: -0.01em; }
+		.card p { color: var(--muted); font-size: 0.98rem; }
+		.card .method { display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.02em; color: var(--amber); text-transform: uppercase; }
+
+		/* ---------- Process ---------- */
+		.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+		.step { position: relative; padding-top: 18px; }
+		.step .num { font-family: var(--font-display); font-size: 2.7rem; font-weight: 700; line-height: 1; background: linear-gradient(120deg, var(--signal), var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 0.9; }
+		.step h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.14rem; margin: 12px 0 8px; }
+		.step p { color: var(--muted); font-size: 0.96rem; }
+
+		/* ---------- Sectors ---------- */
+		.chips { display: flex; flex-wrap: wrap; gap: 12px; }
+		.chip { border: 1px solid var(--border); background: var(--surface); padding: 10px 18px; border-radius: 999px; font-size: 0.95rem; color: var(--text); }
+
+		/* ---------- Stats ---------- */
+		.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 44px 32px; }
+		.stat { text-align: center; }
+		.stat .n { font-family: var(--font-display); font-size: 2.6rem; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(120deg, var(--signal), var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+		.stat .l { color: var(--muted); font-size: 0.92rem; margin-top: 4px; }
+
+		/* ---------- CTA band ---------- */
+		.cta-band { text-align: center; border: 1px solid var(--border); border-radius: 22px; padding: 70px 32px; background: radial-gradient(520px circle at 50% 0%, rgba(55, 198, 224, 0.2), transparent 60%), var(--bg-soft); }
+		.cta-band h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.7rem); letter-spacing: -0.02em; margin-bottom: 16px; }
+		.cta-band p { color: var(--muted); max-width: 48ch; margin: 0 auto 30px; font-size: 1.08rem; }
+
+		/* ---------- Footer ---------- */
+		footer.site { border-top: 1px solid var(--border); padding: 46px 0 30px; margin-top: 36px; }
+		.foot-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+		.foot-inner .logo { font-size: 19px; }
+		.foot-links { display: flex; gap: 22px; }
+		.foot-links a { color: var(--muted); font-size: 14px; transition: color 0.2s; }
+		.foot-links a:hover { color: var(--text); }
+		.accred { font-family: var(--font-mono); color: var(--muted); font-size: 12.5px; margin-top: 26px; text-align: center; }
+	</style>
 </head>
 <body>
-	<header>
-		<h1>sup ace!</h1>
+	<header class="nav">
+		<div class="wrap nav-inner">
+			<a href="#top" class="logo"><span class="mark"></span>faex</a>
+			<nav class="nav-links">
+				<a href="#services">Platform</a>
+				<a href="#process">How it works</a>
+				<a href="#sectors">Teams</a>
+				<a href="#contact" class="nav-cta">Book a demo</a>
+			</nav>
+		</div>
 	</header>
-	<main>
-		<p>What you see is what you get.</p>
+
+	<main id="top">
+		<!-- Hero -->
+		<section class="hero">
+			<div class="wrap">
+				<span class="eyebrow">Data sediment analytics</span>
+				<h1>Find the <span class="grad">fingerprints systems keep.</span></h1>
+				<p class="lede">Every system leaves sediment: logs, traces, events, and the cold data everyone else discards. faex reads those layers, reconstructs what happened, and surfaces the signal that settled underneath the noise.</p>
+				<div class="btn-row">
+					<a href="#contact" class="btn btn-primary">Book a demo</a>
+					<a href="#services" class="btn btn-ghost">See the platform</a>
+				</div>
+			</div>
+		</section>
+		<div class="strata"></div>
+
+		<!-- Services -->
+		<section id="services">
+			<div class="wrap">
+				<div class="section-head">
+					<span class="tag">Platform</span>
+					<h2>Turn exhaust into evidence.</h2>
+					<p>Four layers of analysis over the data your systems were already producing.</p>
+				</div>
+				<div class="grid">
+					<div class="card">
+						<div class="icon">🌊</div>
+						<h3>Log &amp; Trace Analysis</h3>
+						<p>Ingest high-volume logs, traces, and events; parse and structure them without pre-defining every schema.</p>
+						<span class="method">OpenTelemetry · streaming</span>
+					</div>
+					<div class="card">
+						<div class="icon">🔎</div>
+						<h3>Data Forensics</h3>
+						<p>Reconstruct incidents from what the system left behind: timelines, lineage, and root cause from residue.</p>
+						<span class="method">Timeline · lineage graph</span>
+					</div>
+					<div class="card">
+						<div class="icon">📈</div>
+						<h3>Signal Extraction</h3>
+						<p>Separate anomalies from noise across billions of events with statistical and ML-based detection.</p>
+						<span class="method">Anomaly · correlation</span>
+					</div>
+					<div class="card">
+						<div class="icon">🗄️</div>
+						<h3>Cold Strata</h3>
+						<p>Query archived, low-cost storage layers directly, with no rehydration and no data left unexamined.</p>
+						<span class="method">Columnar · time-partitioned</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Process -->
+		<section id="process">
+			<div class="wrap">
+				<div class="section-head">
+					<span class="tag">How it works</span>
+					<h2>Ingest, settle, surface.</h2>
+					<p>The same way sediment records time: layer by layer, oldest at the bottom, all of it queryable.</p>
+				</div>
+				<div class="steps">
+					<div class="step"><div class="num">01</div><h3>Ingest</h3><p>Point your log, trace, and event streams at faex. No schema up front, no data dropped on the floor.</p></div>
+					<div class="step"><div class="num">02</div><h3>Settle</h3><p>Data is layered and time-partitioned into cheap columnar strata, hot and cold, all still addressable.</p></div>
+					<div class="step"><div class="num">03</div><h3>Analyze</h3><p>Query across every layer, run forensics, and let detection surface the anomalies worth your attention.</p></div>
+					<div class="step"><div class="num">04</div><h3>Surface</h3><p>The signal that settled underneath: root causes, patterns, and answers, delivered to the people who need it.</p></div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Sectors -->
+		<section id="sectors">
+			<div class="wrap">
+				<div class="section-head">
+					<span class="tag">Who it's for</span>
+					<h2>Teams that can't afford to discard the record.</h2>
+					<p>Wherever the answer is hiding in data everyone else archives and forgets.</p>
+				</div>
+				<div class="chips">
+					<span class="chip">Platform &amp; SRE</span>
+					<span class="chip">Security &amp; incident response</span>
+					<span class="chip">Observability teams</span>
+					<span class="chip">FinOps</span>
+					<span class="chip">Data engineering</span>
+					<span class="chip">Fraud &amp; risk</span>
+					<span class="chip">Compliance &amp; audit</span>
+					<span class="chip">ML / analytics</span>
+				</div>
+			</div>
+		</section>
+
+		<!-- Stats -->
+		<section>
+			<div class="wrap">
+				<div class="stats">
+					<div class="stat"><div class="n">PB</div><div class="l">Scale per deployment</div></div>
+					<div class="stat"><div class="n">&lt;1s</div><div class="l">Query across cold strata</div></div>
+					<div class="stat"><div class="n">90%</div><div class="l">Lower retention cost</div></div>
+					<div class="stat"><div class="n">0</div><div class="l">Events dropped</div></div>
+				</div>
+			</div>
+		</section>
+
+		<!-- About -->
+		<section id="about">
+			<div class="wrap">
+				<div class="section-head" style="max-width: 720px;">
+					<span class="tag">Why the name</span>
+					<h2>faex is Latin for sediment.</h2>
+					<p>Sediment is what settles when everything else has moved on, and it's where the record is kept. Your systems produce the same thing: exhaust data that piles up, gets archived, and is written off as cost. We think that's backwards. The sediment <em>is</em> the archive: a stratified, timestamped record of everything your infrastructure has ever done. faex is built to read it.</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- CTA -->
+		<section id="contact">
+			<div class="wrap">
+				<div class="cta-band">
+					<h2>See what's at the bottom.</h2>
+					<p>Point faex at a week of your logs and we'll show you the signal you've been archiving away.</p>
+					<a href="mailto:hello@faex.com" class="btn btn-primary">Book a demo</a>
+				</div>
+			</div>
+		</section>
 	</main>
-	<footer>
-		<p>Copyright © 2023 faex.com</p>
-		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3018453753170938" crossorigin="anonymous"></script>
+
+	<footer class="site">
+		<div class="wrap">
+			<div class="foot-inner">
+				<a href="#top" class="logo"><span class="mark"></span>faex</a>
+				<nav class="foot-links">
+					<a href="#services">Platform</a>
+					<a href="#process">How it works</a>
+					<a href="#sectors">Teams</a>
+					<a href="#contact">Contact</a>
+				</nav>
+			</div>
+			<p class="accred">© 2023 - 2026 faex // data sediment analytics</p>
+		</div>
 	</footer>
 </body>
 </html>
